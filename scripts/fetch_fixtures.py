@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """Download pinned causal-open-data fixtures and verify SHA256.
 
-This repository is private. Consumers (tetrad-rs, ezcausal, opencausal)
-should pin a commit or tag and pass a GitHub token with `contents:read`.
+This repository is public. Consumers (tetrad-rs, ezcausal, opencausal)
+should pin a commit or tag. A GitHub token is optional; it is helpful
+for API rate limits or private forks.
 
 Examples:
 
   python3 scripts/fetch_fixtures.py --ref <commit> --dest ./fixtures
   python3 scripts/fetch_fixtures.py --ref <tag> --all --dest ./fixtures
 
-Environment: GITHUB_TOKEN or GH_TOKEN.
+Environment: GITHUB_TOKEN or GH_TOKEN (optional).
 """
 
 from __future__ import annotations
@@ -101,7 +102,7 @@ def parse_ci_list(text: str) -> list[str]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--repo", default=DEFAULT_REPO, help="owner/name of this private repo")
+    parser.add_argument("--repo", default=DEFAULT_REPO, help="owner/name (public by default)")
     parser.add_argument("--ref", required=True, help="Pinned tag or commit SHA (not main).")
     parser.add_argument("--dest", type=Path, required=True, help="Directory to write files into.")
     parser.add_argument(
@@ -114,7 +115,8 @@ def main() -> int:
     token = github_token()
     if token is None:
         print(
-            "warning: no GITHUB_TOKEN/GH_TOKEN; private-repo downloads will fail",
+            "note: no GITHUB_TOKEN/GH_TOKEN; public downloads work unauthenticated "
+            "(token is optional; helpful for rate limits / private forks)",
             file=sys.stderr,
         )
 

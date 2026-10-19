@@ -19,6 +19,6 @@ python3 scripts/prep_myconnectome.py          # add --skip-large to omit 630
 python3 scripts/write_checksums.py
 python3 scripts/verify_fixtures.py
 
-export GITHUB_TOKEN=...
+# GITHUB_TOKEN / GH_TOKEN is optional (rate limits / private forks)
 python3 scripts/fetch_fixtures.py --ref <commit> --dest ./fixtures
 ```
