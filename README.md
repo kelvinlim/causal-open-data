@@ -5,7 +5,7 @@ Openly licensed test and benchmark datasets for causal discovery, shared by
 [ezcausal](https://github.com/kelvinlim/ezcausal), and
 [opencausal](https://github.com/kelvinlim/opencausal).
 
-**Keep this repository private.** Sibling packages should pin a commit or tag
+This repository is **public**. Sibling packages should pin a commit or tag
 and pull fixtures from here instead of vendoring copies.
 
 No Human Connectome Project (HCP) data, no other restricted/participant data,
@@ -40,10 +40,14 @@ sha256sum -c SHA256SUMS
 or, for the default CI set only, verify the paths in `datasets/CI_FIXTURES.txt`
 against `SHA256SUMS`.
 
+Submodule, sparse clone, and the download helper work **without a GitHub
+token**. Prefer HTTPS; SSH is optional if you already use it.
+
 ### Option A — git submodule (recommended)
 
 ```bash
-git submodule add git@github.com:kelvinlim/causal-open-data.git third_party/causal-open-data
+git submodule add https://github.com/kelvinlim/causal-open-data.git third_party/causal-open-data
+# or: git@github.com:kelvinlim/causal-open-data.git
 git -C third_party/causal-open-data checkout <tag-or-commit>
 git -C third_party/causal-open-data show -s --format=%H HEAD   # record the pin
 ```
@@ -54,29 +58,37 @@ CC-BY 4.0 (see NOTICE). MyConnectome is CC0 / PDDL.
 ### Option B — sparse clone of a pinned commit
 
 ```bash
-git clone --filter=blob:none --sparse git@github.com:kelvinlim/causal-open-data.git
+git clone --filter=blob:none --sparse https://github.com/kelvinlim/causal-open-data.git
+# or: git@github.com:kelvinlim/causal-open-data.git
 cd causal-open-data
 git sparse-checkout set datasets scripts
 git checkout <tag-or-commit>
 sha256sum -c SHA256SUMS
 ```
 
-### Option C — download helper (token required)
+### Option C — download helper (token optional)
 
 ```bash
-export GITHUB_TOKEN=...   # contents:read on kelvinlim/causal-open-data
 python3 scripts/fetch_fixtures.py --ref <tag-or-commit> --dest ./fixtures
 # add --all to include the non-CI 630-ROI matrix
+# GITHUB_TOKEN / GH_TOKEN is optional: helpful for API rate limits or private forks
 ```
 
 The helper pulls `SHA256SUMS` from the pinned ref, downloads each path, and
-refuses to write a file whose SHA256 does not match.
+refuses to write a file whose SHA256 does not match. Unauthenticated Contents
+API or `raw.githubusercontent.com` works; a token is not required for this
+public repository.
 
-### Option D — GitHub Contents API
+### Option D — public raw URLs or Contents API
 
-Private raw GitHub URLs need auth. Use the Contents API (or git blobs above
-1 MiB) with `Authorization: Bearer $GITHUB_TOKEN` and `ref=<commit>`. Do not
-depend on unauthenticated `raw.githubusercontent.com` for this repo.
+Once pinned to a **commit SHA**, public raw URLs work without auth:
+
+```
+https://raw.githubusercontent.com/kelvinlim/causal-open-data/<commit>/<path>
+```
+
+The Contents API is also public (`?ref=<commit>`). Files over 1 MiB may need
+the git blobs endpoint. A token is optional (rate limits / private forks).
 
 tetrad-rs, ezcausal, and opencausal should switch to one of the options above
 and stop vendoring Boston / MyConnectome copies.
