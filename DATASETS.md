@@ -23,9 +23,10 @@ release, file guid `duwv4`.
 | `datasets/boston/boston_fixture_row_provenance.csv` | 641 × 5 | `sub_id`, `ref_date`, `unique_id`, instrument, `days_elapsed`. |
 | `datasets/boston/boston_data_lagged_within_subject.csv` | 621 × 14 | Lag-fixed variant (within subject). |
 | `datasets/boston/boston_lagged_within_subject_provenance.csv` | 621 × 5 | Current and lag `unique_id` / `ref_date`. |
-| `datasets/boston/boston_sub132_allsurveys_10v.csv` | 142 × 10 | Primary single-subject case (Set A). |
+| `datasets/boston/boston_sub132_allsurveys_10v.csv` | 142 × 10 | Primary single-subject case (Set A). Original long fixture; not replaced by ladder sub 305. |
 | `datasets/boston/boston_sub132_fullsurvey_15v.csv` | 61 × 15 | Subject 132, Full surveys only. |
 | `datasets/boston/boston_sub79_allsurveys_10v.csv` | 142 × 10 | Alternate single-subject Set A (`wakes` nearly constant). |
+| `datasets/boston/individual/boston_sub*_n*_10v.csv` | 11–129 × 10 | Individual Set A n-scaling ladder (six subjects). |
 | `datasets/boston/boston_pooled20_itemlevel_20v.csv` | 641 × 20 | Same 641 rows as the classic fixture, item-level vars. |
 | `datasets/boston/boston_pooled20_fixture_row_ids.csv` | 641 × 3 | Compact `unique_id`, `sub_id`, `ref_date`. |
 | `datasets/boston/CITATION.txt` | — | Upstream citation text. |
@@ -89,7 +90,46 @@ Asked on both Full and Short surveys:
 Subject **132** is the primary single-subject case (142 complete rows,
 max \|r\| ≈ 0.74 for TIB–TST, seven collection windows 2020-03 to 2021-11).
 ~90% of consecutive surveys are one day apart; 2–3 gaps of ~100 days
-separate collection waves.
+separate collection waves. It remains the original long fixture and the
+canonical ≥100 CI subject; the n-scaling ladder uses subject **305** as
+its ≥100 rung instead of replacing 132.
+
+### n-scaling tests
+
+**n-scaling** means running the same discovery method on one person’s
+series at increasing lengths. The ladder below is six *different*
+subjects, one per complete-case Set A length bin — not prefixes of a
+single series — so each rung is an independent individual-level matrix.
+
+Each CSV is complete Set A rows for that `sub_id`, in chronological
+order (`days_elapsed`, then `ref_date`), regenerated from OSF `duwv4`
+by `scripts/prep_boston.py`. License: **CC-BY 4.0** (same as the rest of
+Boston; see NOTICE).
+
+Subject choice (pinned, not re-searched at prep time): among complete-case
+Set A series in the bin with no near-constant column, the subject with
+the highest minimum column SD.
+
+| Bin (complete Set A rows) | `sub_id` | n × p | Path |
+|---------------------------|----------|-------|------|
+| 10–19 | 464 | 11 × 10 | `datasets/boston/individual/boston_sub464_n11_10v.csv` |
+| 20–29 | 250 | 27 × 10 | `datasets/boston/individual/boston_sub250_n27_10v.csv` |
+| 30–39 | 304 | 35 × 10 | `datasets/boston/individual/boston_sub304_n35_10v.csv` |
+| 40–59 | 1534 | 41 × 10 | `datasets/boston/individual/boston_sub1534_n41_10v.csv` |
+| 60–99 | 323 | 87 × 10 | `datasets/boston/individual/boston_sub323_n87_10v.csv` |
+| ≥100 | 305 | 129 × 10 | `datasets/boston/individual/boston_sub305_n129_10v.csv` |
+
+Columns (Set A, same order as `boston_sub132_allsurveys_10v.csv`):
+
+`TIB`, `TST`, `sleepdiary_sleeplatency`, `sleepdiary_wakes`,
+`night_awakening_time`, `sleepdiary_naptime`, `socialize_min`,
+`people_contact`, `alcohol_bev`, `stress`
+
+Full-survey classic-7 variables (`PANAS_PA`, `PANAS_NA`, `worry_scale`,
+`PHQ9`, plus `alcohol_bev`, `TIB`, `TST`) exist only on the Full
+instrument. Per-subject Full complete-case length tops out at **61**
+(subject 132), so classic-7 **cannot** reach n ≥ 100. Use Set A (Full +
+Short) for individual n-scaling through the ≥100 rung.
 
 ## MyConnectome (Poldrack lab)
 
@@ -187,6 +227,7 @@ committed.
 | Classic Boston PC/FGES/GFCI CI | `boston_data_raw.csv` + `boston_prior.txt`; lag in-process if you must match historical 640 × 14 edges | CC-BY 4.0 attribution required |
 | New Boston lag work | `boston_data_lagged_within_subject.csv` + `boston_prior.txt` | CC-BY 4.0 |
 | Single-subject Boston | `boston_sub132_allsurveys_10v.csv` | CC-BY 4.0 |
+| Boston n-scaling (individual Set A) | `individual/boston_sub*_n*_10v.csv` | CC-BY 4.0 |
 | Small rsfMRI | `myconnectome_sub066_518x50.csv` | CC0 / PDDL |
 | Large rsfMRI CI | `myconnectome_sub066_518x379.csv` | CC0 / PDDL |
 | Optional full parcellation | `large/myconnectome_sub066_518x630.csv` | CC0 / PDDL; not CI |
