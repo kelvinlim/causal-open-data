@@ -1,0 +1,68 @@
+{
+  "files": [
+    {
+      "path": "boston/boston_data_lagged_within_subject.csv",
+      "sha256": "6f8597783634ee800ac554cdb1619b014d19badb39aa237c9774e491471134e0",
+      "bytes": 59394,
+      "n": 621,
+      "p": 14,
+      "license": "CC-BY-4.0"
+    },
+    {
+      "path": "boston/boston_data_raw.csv",
+      "sha256": "e194b6e72be50054dfad53a059fde26af2cf132897eee511ff7b6ac3e2f12e02",
+      "bytes": 30641,
+      "n": 641,
+      "p": 7,
+      "license": "CC-BY-4.0"
+    },
+    {
+      "path": "boston/boston_fixture_row_provenance.csv",
+      "sha256": "361f892da7015671319e23071bec682d61f8c3348186206831e813dda4204332",
+      "bytes": 30802,
+      "license": "CC-BY-4.0"
+    },
+    {
+      "path": "boston/boston_sub132_allsurveys_10v.csv",
+      "sha256": "ed60d2cbe247de61a6c74828d142645397d1e393b9fd74c8bbf367ae4f32782c",
+      "bytes": 8721,
+      "n": 142,
+      "p": 10,
+      "license": "CC-BY-4.0"
+    },
+    {
+      "path": "myconnectome/myconnectome_parcel_labels.csv",
+      "sha256": "1c465f38de09a821f89f712b37d566d25ae051d03c7fb80e0c5285cf0d497544",
+      "bytes": 74951,
+      "license": "CC0"
+    },
+    {
+      "path": "myconnectome/myconnectome_roi379.txt",
+      "sha256": "8c44023dca01d3033f63bfd8c10b303fdf09777766c802208258aa4db8a52ade",
+      "bytes": 7884,
+      "license": "CC0"
+    },
+    {
+      "path": "myconnectome/myconnectome_roi50.txt",
+      "sha256": "34bf3ae4f279aed3c47d3f88743ec64b4cfcdf4d7bc46fd422693f4825bd75f3",
+      "bytes": 1022,
+      "license": "CC0"
+    },
+    {
+      "path": "myconnectome/myconnectome_sub066_518x379.csv",
+      "sha256": "c79f2f09de55778b487beecdbfbbbe2df12651836e9cdab7cdb38070ccdf2a2f",
+      "bytes": 2116057,
+      "n": 518,
+      "p": 379,
+      "license": "CC0"
+    },
+    {
+      "path": "myconnectome/myconnectome_sub066_518x50.csv",
+      "sha256": "a0fc18d708c210236a230dac4865d1e09d243039c04618428b26b7364492454d",
+      "bytes": 278506,
+      "n": 518,
+      "p": 50,
+      "license": "CC0"
+    }
+  ]
+}
