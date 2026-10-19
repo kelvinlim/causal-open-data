@@ -5,10 +5,10 @@ Python 3.11+ with `pandas` and `numpy` (`pip install -r requirements.txt`).
 
 | Script | Purpose |
 |--------|---------|
-| `prep_boston.py` | Download OSF `duwv4` into `.cache/boston/` and write `datasets/boston/`. |
+| `prep_boston.py` | Download OSF `duwv4` into `.cache/boston/` and write `datasets/boston/` (including the individual Set A n-scaling ladder). |
 | `prep_myconnectome.py` | Download Stanford timeseries/labels into `.cache/myconnectome/` and write `datasets/myconnectome/` (630-ROI under `large/`). |
 | `write_checksums.py` | Rewrite root `SHA256SUMS` for files under `datasets/`. |
-| `verify_fixtures.py` | Shapes, classic subject set, SHA256, 379/630 ranks, no HCP/Jang filenames. |
+| `verify_fixtures.py` | Shapes, classic subject set, n-scaling ladder, SHA256, 379/630 ranks, no HCP/Jang filenames. |
 | `fetch_fixtures.py` | Consumer helper: pin `--ref`, download CI set (or `--all`), check SHA256. |
 
 Raw caches are gitignored. Do not commit OSF or OpenNeuro dumps.

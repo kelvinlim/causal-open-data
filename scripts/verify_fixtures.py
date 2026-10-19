@@ -12,6 +12,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from codutil import DATASETS, REPO_ROOT, read_sha256sums, sha256_file  # noqa: E402
+from prep_boston import N_SCALING_LADDER, SET_A, ladder_relpath  # noqa: E402
 
 EXPECTED_SHAPES = {
     "datasets/boston/boston_data_raw.csv": (641, 7),
@@ -25,6 +26,10 @@ EXPECTED_SHAPES = {
     "datasets/myconnectome/myconnectome_sub066_518x379.csv": (518, 379),
     "datasets/myconnectome/large/myconnectome_sub066_518x630.csv": (518, 630),
 }
+EXPECTED_SHAPES.update(
+    {ladder_relpath(sub_id, n): (n, 10) for _bin, sub_id, n in N_SCALING_LADDER}
+)
+LADDER_PATHS = [ladder_relpath(sub_id, n) for _bin, sub_id, n in N_SCALING_LADDER]
 
 CLASSIC_COLS = [
     "alcohol_bev",
@@ -122,6 +127,19 @@ def main() -> int:
     for rel in ci_paths:
         if not (REPO_ROOT / rel).exists():
             fail(f"CI fixture missing: {rel}")
+    missing_ladder_ci = [rel for rel in LADDER_PATHS if rel not in ci_paths]
+    if missing_ladder_ci:
+        fail(f"n-scaling ladder missing from CI_FIXTURES.txt: {missing_ladder_ci}")
+
+    for rel in LADDER_PATHS + [
+        "datasets/boston/boston_sub132_allsurveys_10v.csv",
+        "datasets/boston/boston_sub79_allsurveys_10v.csv",
+    ]:
+        frame = pd.read_csv(REPO_ROOT / rel)
+        if list(frame.columns) != SET_A:
+            fail(f"{rel} columns {list(frame.columns)} != Set A")
+        if frame.isna().any().any():
+            fail(f"{rel} has missing values")
 
     for path in DATASETS.rglob("*"):
         lowered = path.name.lower()
@@ -132,6 +150,10 @@ def main() -> int:
     print(f"  checksums: {len(mapping)}")
     print(f"  CI fixtures: {len(ci_paths)}")
     print(f"  classic Boston: 641 x 7, {len(EXPECTED_SUBJECTS)} subjects")
+    print(
+        "  Boston n-scaling ladder: "
+        + ", ".join(f"sub {sub_id} n={n}" for _bin, sub_id, n in N_SCALING_LADDER)
+    )
     print(f"  MyConnectome 379 rank: {rank}; 630 rank: {rank630} (non-CI)")
     return 0
 

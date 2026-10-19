@@ -22,6 +22,12 @@ and no Jang panic-EMA files are stored here.
 | [`datasets/myconnectome/myconnectome_sub066_518x379.csv`](datasets/myconnectome/myconnectome_sub066_518x379.csv) | 518 × 379 | CC0 / PDDL | yes |
 | [`datasets/myconnectome/large/myconnectome_sub066_518x630.csv`](datasets/myconnectome/large/myconnectome_sub066_518x630.csv) | 518 × 630 | CC0 / PDDL | **no** (T < p) |
 
+Boston **n-scaling** (same discovery method on one person’s Set A series at
+increasing lengths) lives under
+[`datasets/boston/individual/`](datasets/boston/individual/) (six subjects,
+n = 11–129); subject 132 stays the original long fixture. Details:
+[DATASETS.md](DATASETS.md#n-scaling-tests).
+
 The 630-ROI matrix is rank-deficient and lives outside the default CI set.
 Use the 379-ROI subset as the large full-rank case. Shapes, selection rules,
 and checksums: [DATASETS.md](DATASETS.md). Attributions: [NOTICE](NOTICE).

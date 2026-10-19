@@ -8,6 +8,12 @@ datasets/boston/boston_lagged_within_subject_provenance.csv
 datasets/boston/boston_sub132_allsurveys_10v.csv
 datasets/boston/boston_sub132_fullsurvey_15v.csv
 datasets/boston/boston_sub79_allsurveys_10v.csv
+datasets/boston/individual/boston_sub464_n11_10v.csv
+datasets/boston/individual/boston_sub250_n27_10v.csv
+datasets/boston/individual/boston_sub304_n35_10v.csv
+datasets/boston/individual/boston_sub1534_n41_10v.csv
+datasets/boston/individual/boston_sub323_n87_10v.csv
+datasets/boston/individual/boston_sub305_n129_10v.csv
 datasets/myconnectome/myconnectome_sub066_518x50.csv
 datasets/myconnectome/myconnectome_roi50.txt
 datasets/myconnectome/myconnectome_sub066_518x379.csv

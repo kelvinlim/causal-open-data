@@ -15,6 +15,11 @@ exactly):
 The classic file is **not** lagged. tetrad-rs historically lagged the pooled
 stack once (640 x 14), which crosses a subject boundary 19 times. This script
 also writes a within-subject lag (621 x 14) without changing the classic CSV.
+
+Individual Set A n-scaling ladder (complete cases, chronological) is written
+under `datasets/boston/individual/`. Subject 132 remains the original long
+single-subject fixture at the Boston root and is not replaced by ladder
+subject 305.
 """
 
 from __future__ import annotations
@@ -80,6 +85,28 @@ EXPECTED_SUBJECTS = [
     24, 41, 46, 53, 60, 79, 86, 113, 128, 130,
     132, 141, 146, 152, 162, 199, 251, 286, 290, 350,
 ]
+
+# Pinned n-scaling ladder: one subject per complete-case Set A length bin.
+# Selection (documented, not re-searched at prep time): among subjects in the
+# bin with no near-constant Set A column, pick the highest minimum column SD.
+# (bin_label, sub_id, expected_n)
+N_SCALING_LADDER = [
+    ("10-19", 464, 11),
+    ("20-29", 250, 27),
+    ("30-39", 304, 35),
+    ("40-59", 1534, 41),
+    ("60-99", 323, 87),
+    (">=100", 305, 129),
+]
+
+
+def ladder_filename(sub_id: int, n: int) -> str:
+    return f"boston_sub{sub_id}_n{n}_10v.csv"
+
+
+def ladder_relpath(sub_id: int, n: int) -> str:
+    return f"datasets/boston/individual/{ladder_filename(sub_id, n)}"
+
 
 BOSTON_PRIOR = """\
 /knowledge
@@ -167,6 +194,33 @@ def write_csv(df: pd.DataFrame, path: Path, *, round6: bool = False) -> None:
     out.to_csv(path, index=False)
 
 
+def set_a_complete_chronological(daily: pd.DataFrame, sub_id: int) -> pd.DataFrame:
+    """Complete Set A rows for one subject, chronological (days_elapsed, ref_date)."""
+    frame = daily.loc[daily["sub_id"] == sub_id].dropna(subset=SET_A).copy()
+    frame["ref_date_parsed"] = pd.to_datetime(frame["ref_date"], errors="coerce")
+    sort_cols = [c for c in ("days_elapsed", "ref_date_parsed") if c in frame.columns]
+    frame = frame.sort_values(sort_cols, kind="mergesort")
+    return frame
+
+
+def write_n_scaling_ladder(daily: pd.DataFrame, out: Path) -> list[tuple[str, int, int]]:
+    """Write pinned individual Set A CSVs; return (relpath, sub_id, n) rows."""
+    ladder_dir = out / "individual"
+    written: list[tuple[str, int, int]] = []
+    for _bin_label, sub_id, expected_n in N_SCALING_LADDER:
+        subset = set_a_complete_chronological(daily, sub_id)
+        n = len(subset)
+        if n != expected_n:
+            raise SystemExit(
+                f"n-scaling subject {sub_id}: expected {expected_n} complete "
+                f"Set A rows, got {n}"
+            )
+        path = ladder_dir / ladder_filename(sub_id, expected_n)
+        write_csv(subset[SET_A], path, round6=True)
+        written.append((ladder_relpath(sub_id, expected_n), sub_id, n))
+    return written
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -181,12 +235,25 @@ def main() -> int:
         default=DATASETS / "boston",
         help="Directory for committed derivatives.",
     )
+    parser.add_argument(
+        "--only-ladder",
+        action="store_true",
+        help="Write only datasets/boston/individual/ (do not rewrite other Boston files).",
+    )
     args = parser.parse_args()
 
     daily = load_osf_daily(args.cache_dir)
-    subset = classic_subset(daily)
     out = args.out_dir
     out.mkdir(parents=True, exist_ok=True)
+
+    if args.only_ladder:
+        ladder = write_n_scaling_ladder(daily, out)
+        print(f"wrote n-scaling ladder under {out.relative_to(REPO_ROOT)}/individual")
+        for rel, sub_id, n in ladder:
+            print(f"  {rel}: sub {sub_id}, {n} x {len(SET_A)}")
+        return 0
+
+    subset = classic_subset(daily)
 
     write_csv(subset[CLASSIC_COLS], out / "boston_data_raw.csv")
     write_text(out / "boston_prior.txt", BOSTON_PRIOR)
@@ -215,10 +282,14 @@ def main() -> int:
     write_csv(sub132_full[SET_B15], out / "boston_sub132_fullsurvey_15v.csv", round6=True)
     write_csv(subset[SET_B], out / "boston_pooled20_itemlevel_20v.csv", round6=True)
 
+    ladder = write_n_scaling_ladder(daily, out)
+
     print(f"wrote Boston derivatives under {out.relative_to(REPO_ROOT)}")
     print(f"  boston_data_raw.csv: {len(subset)} x {len(CLASSIC_COLS)}")
     print(f"  boston_data_lagged_within_subject.csv: {len(lagged)} x {lagged.shape[1]}")
     print(f"  boston_sub132_allsurveys_10v.csv: {len(sub132)} x {len(SET_A)}")
+    for rel, sub_id, n in ladder:
+        print(f"  {rel}: sub {sub_id}, {n} x {len(SET_A)}")
     return 0
 
 
