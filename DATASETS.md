@@ -30,6 +30,7 @@ release, file guid `duwv4`.
 | `datasets/boston/boston_pooled20_itemlevel_20v.csv` | 641 × 20 | Same 641 rows as the classic fixture, item-level vars. |
 | `datasets/boston/boston_pooled20_fixture_row_ids.csv` | 641 × 3 | Compact `unique_id`, `sub_id`, `ref_date`. |
 | `datasets/boston/CITATION.txt` | — | Upstream citation text. |
+| `datasets/boston/README.md` | — | Folder pointer to the Full instrument summary. |
 
 Primary checksums (full list in SHA256SUMS):
 
@@ -38,6 +39,43 @@ Primary checksums (full list in SHA256SUMS):
 | `boston_data_raw.csv` | `e194b6e72be50054dfad53a059fde26af2cf132897eee511ff7b6ac3e2f12e02` |
 | `boston_data_lagged_within_subject.csv` | `6f8597783634ee800ac554cdb1619b014d19badb39aa237c9774e491471134e0` |
 | `boston_sub132_allsurveys_10v.csv` | `a2629eaacc614e4c5a9ab3db78b72107618d64980d0ca2554dac1f44c6742a42` |
+
+### Full daily survey instrument
+
+Plain-language summary of the Full daily form
+(`redcap_repeat_instrument == covid19`). Questionnaire PDFs are on OSF
+[gpxwa](https://osf.io/gpxwa) (recommended 2022-05-10 release, **CC-BY
+4.0**):
+[`2b_COVID19_Daily_Survey_FULL_version.pdf`](https://osf.io/q6sn5)
+and the Short counterpart
+[`2b_COVID19_daily_survey_SHORT_version.pdf`](https://osf.io/jz9nr).
+Variable notes:
+[`2a_README_COVID19_daily_survey_README.pdf`](https://osf.io/n9cky).
+
+1. **Last night’s sleep** — into-bed, try-to-sleep, wake, and out-of-bed
+   times; latency (min); nocturnal wakings (0–5+); minutes awake; ease
+   of falling asleep; dreams; nap yes/no + minutes; sleep-tracker
+   assisted?; free text. OSF-derived `TIB` / `TST` hours come from these
+   times.
+2. **Yesterday’s activity** — steps (if a counter); left the house;
+   places visited; face-to-face contact count; virtual socialize yes/no
+   + minutes; exercise timing; alcoholic drinks.
+3. **Coronavirus status** — quarantine; fever; respiratory symptoms;
+   tested; diagnosed.
+4. **Current mood (1–5)** — PANAS-20 plus sad / happy / angry.
+5. **Isolation / worry / stress (7-point)** — social isolation; worry
+   about own, family/friends, community, and national/global health;
+   finances; overall stress. (OSF codes 1 = high, 7 = low.)
+6. **Recent days PHQ-style items (0–3)** — interest, depression, sleep,
+   energy, appetite, self-worth, concentration, motor (8 items; no
+   suicidality item). OSF `PHQ9` is their sum.
+7. **Optional free text.**
+
+The Short instrument (`covid19_short_survey`) keeps sleep, activity,
+coronavirus status, and overall stress. It skips most mood, isolation,
+worry, and PHQ items. That is why the 10-variable Set A (shared columns)
+can exceed 100 days/person, while classic-7 Full-only complete cases
+top out at **61** (subject 132).
 
 ### Classic 641 × 7 selection rule
 
@@ -127,9 +165,10 @@ Columns (Set A, same order as `boston_sub132_allsurveys_10v.csv`):
 
 Full-survey classic-7 variables (`PANAS_PA`, `PANAS_NA`, `worry_scale`,
 `PHQ9`, plus `alcohol_bev`, `TIB`, `TST`) exist only on the Full
-instrument. Per-subject Full complete-case length tops out at **61**
-(subject 132), so classic-7 **cannot** reach n ≥ 100. Use Set A (Full +
-Short) for individual n-scaling through the ≥100 rung.
+instrument (see [Full daily survey instrument](#full-daily-survey-instrument)).
+Per-subject Full complete-case length tops out at **61** (subject 132),
+so classic-7 **cannot** reach n ≥ 100. Use Set A (Full + Short) for
+individual n-scaling through the ≥100 rung.
 
 ## MyConnectome (Poldrack lab)
 
